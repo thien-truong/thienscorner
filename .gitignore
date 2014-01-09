@@ -2,3 +2,9 @@
 # Ignore .bundle directory with line below.
 .bundle
 *.db
+logs/*
+!.gitkeep
+node_modules/
+tmp
+.DS_Store
+.idea
