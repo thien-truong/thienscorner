@@ -2,10 +2,18 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
-  controller('MyCtrl1', [function() {
+var thienscornerApp = angular.module('myApp', []);
 
-  }])
-  .controller('MyCtrl2', [function() {
-
-  }]);
+thienscornerApp.controller('RecipeListCtrl', function($scope) {
+  $scope.recipes = [
+    {'name': 'Zuppa Tuscana',
+     'servings': '4 servings',
+     'preparation_minutes': '15 minutes',
+     'cooking_minutes': '60 minutes'},
+    {'name': 'Cookie',
+     'servings': '4 servings',
+     'preparation_minutes': '10 minutes',
+     'cooking_minutes': '20 minutes'}
+  ];
+});
+  

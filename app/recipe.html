@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="myApp">
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/
-angular.min.js"></script>
-<title>Thien's Corner</title>
+  <script src="lib/angular/angular.js"></script>
+  <script src="js/controllers.js"></script>
+  <title>Thien's Corner</title>
 </head>
 
-<body>
+<body ng-controller="RecipeListCtrl">
 
+  <ol>
+    <li ng-repeat="recipe in recipes">
+      {{recipe.name}}
+      <p>{{recipe.servings}}</p>
+      <p>{{recipe.preparation_minutes}}</p>
+      <p>{{recipe.cooking_minute}}</p>
+    </li>
+  </ol>
+
+<!--
 <h1>ZUPPA TUSCANA</h1>
 
 <p>Yield:  4 servings</p>
@@ -29,6 +39,7 @@ angular.min.js"></script>
 <li>Add sausage, bacon, kale, salt &amp; pepper to taste, and simmer for another 10 minutes.</li>
 <li>Add whipping cr eam, heat through and serve.</li>
 </ol>
+-->
 
 </body>
 
