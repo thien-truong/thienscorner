@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Thien's Corner</title>
+    <script src="http://fb.me/react-0.12.2.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>       
+  </head>
+
+  <body>
+    <div id="app-container"></div>
+    <script type="text/jsx">
+
+      var RecipeBook = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <h1>Recipe List</h1>
+              <RecipeList />
+            </div>
+          );
+        }
+      });
+
+      var RecipeList = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <h2>Recipe List</h2>
+            </div>
+          );
+        }
+      });
+
+      React.render(
+        <RecipeBook />, document.getElementById('app-container')
+      );
+      
+    </script>
+  </body>
+</html>
