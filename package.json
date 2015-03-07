@@ -1,0 +1,24 @@
+{
+  "name": "thienscorner",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "iojs server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thien-truong/thienscorner.git"
+  },
+  "author": "Thien Truong",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/thien-truong/thienscorner/issues"
+  },
+  "homepage": "https://github.com/thien-truong/thienscorner",
+  "dependencies": {
+    "express": "^4.12.2",
+    "hogan-express": "^0.5.2"
+  }
+}
