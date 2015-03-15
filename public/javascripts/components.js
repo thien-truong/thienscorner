@@ -13,7 +13,12 @@ var RecipeList = React.createClass({
   render: function() {
     var recipeNodes = this.props.data.map(function(recipe, index) {
       return (
-        <Recipe key={index} title={recipe.title} />
+        <Recipe
+          key={index}
+          title={recipe.title}
+          ingredients={recipe.ingredients}
+          instructions={recipe.instructions}
+        />
       )
     });
     return (
@@ -30,6 +35,8 @@ var Recipe = React.createClass({
     return (
       <div>
         {this.props.title}
+        {this.props.ingredients}
+        {this.props.instructions}
         <br/>
 
       </div>
@@ -43,7 +50,7 @@ var recipeData = [
      {quantity: '1', unit: "cup", name: "celery"},
      {quantity: '2', unit: "cup", name: "fish"}
    ],
-    instruction: "cook celery with fish"
+    instructions: "cook celery with fish"
   }
 ]
 
