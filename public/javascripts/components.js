@@ -52,7 +52,7 @@ var recipeData = [
    ],
     instructions: "cook celery with fish"
   }
-]
+];
 
 React.render(
   <RecipeBook data={recipeData} />, document.getElementById('app-container')
