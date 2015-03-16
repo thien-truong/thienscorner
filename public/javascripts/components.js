@@ -1,8 +1,7 @@
-var RecipeBook = React.createClass({
+var RecipesHome = React.createClass({
   render: function() {
     return (
       <div>
-        <h1>Recipes</h1>
         <RecipeList data={this.props.data}/>
       </div>
     );
@@ -21,7 +20,7 @@ var RecipeList = React.createClass({
     });
     return (
       <div>
-        <h2>Recipe List</h2>
+        <h1>Recipes</h1>
         {recipeNodes}
       </div>
     );
@@ -46,16 +45,52 @@ var Recipe = React.createClass({
   render: function() {
     return (
       <div>
-        {this.props.title}
-        {this.props.ingredients}
-        {this.props.instructions}
+        <h2>{this.props.title}</h2>
+        <h3>Ingredients:</h3>
+        <IngredientList ingredients={this.props.ingredients} />
+        <h3>Instructions:</h3>
+        <p>{this.props.instructions}</p>
         <br/>
       </div>
     );
   }
 });
 
-var ContentSection = React.createClass({
+var IngredientList = React.createClass({
+  render: function(){
+    var ingredientNodes = this.props.ingredients.map(function (ingredient, index) {
+      return (
+        <Ingredient
+          key={index}
+          quantity={ingredient.quantity}
+          unitOfMeasurement={ingredient.unit}
+          name={ingredient.name}
+        />
+      )
+    });
+    return (
+      <div>
+        <ul>{ingredientNodes}</ul>
+      </div>
+    );
+  }
+});
+
+var Ingredient = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <li>
+          {this.props.quantity}
+          {this.props.unitOfMeasurement}
+          {this.props.name}
+        </li>
+      </div>
+    )
+  }
+});
+
+var App = React.createClass({
   getInitialState: function() {
     return {currentRoute: "/recipes"};
   },
@@ -73,7 +108,7 @@ var ContentSection = React.createClass({
   render: function() {
     var content;
     if (this.state.currentRoute == "/recipes") {
-      content = <RecipeBook data={recipeData} />;
+      content = <RecipesHome data={recipeData} />;
     } else if (this.state.currentRoute == "/recipes/0") {
       content = <Recipe
         title={recipeData[0].title}
@@ -83,9 +118,9 @@ var ContentSection = React.createClass({
     }
 
     return (
-      <section>
+      <main>
         {content}
-      </section>
+      </main>
     );
   }
 });
@@ -96,10 +131,13 @@ var recipeData = [
      {quantity: '1', unit: "cup", name: "celery"},
      {quantity: '2', unit: "cup", name: "fish"}
    ],
-    instructions: "cook celery with fish"
+    instructions: [
+      {instruction: "cook celery with fish"},
+      {instruction: "add onion"}
+    ]
   }
 ];
 
 React.render(
-  <ContentSection />, document.getElementById('app-container')
+  <App />, document.getElementById('app-container')
 );

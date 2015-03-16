@@ -10,6 +10,7 @@
   ],
   "dependencies": {
     "react": "~0",
-    "reflux": "~0"
+    "reflux": "~0",
+    "react-router": "~0"
   }
 }
