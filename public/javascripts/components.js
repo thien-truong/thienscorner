@@ -1,16 +1,45 @@
+var PageHeader = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <h1>Thien's Corner</h1>
+        <nav>
+          <ul>
+            <li><ReactRouter.Link to="recipes">Recipes</ReactRouter.Link></li>
+            <li><ReactRouter.Link to="about">About</ReactRouter.Link></li>
+          </ul>
+        </nav>
+      </div>
+    );
+  }
+});
+
+var About = React.createClass({
+  render: function() {
+    return (
+      <div>
+        This is about me
+      </div>
+    );
+  }
+});
+
 var RecipesHome = React.createClass({
   render: function() {
     return (
       <div>
-        <RecipeList data={this.props.data}/>
+        <RecipeList />
       </div>
     );
   }
 });
 
 var RecipeList = React.createClass({
+  getInitialState: function() {
+    return { data: recipeData };
+  },
   render: function() {
-    var recipeNodes = this.props.data.map(function(recipe, index) {
+    var recipeNodes = this.state.data.map(function(recipe, index) {
       return (
         <RecipeLink
           key={index}
@@ -28,12 +57,9 @@ var RecipeList = React.createClass({
 });
 
 var RecipeLink = React.createClass({
-  handleClick: function() {
-    Actions.route("/recipes/0")
-  },
   render: function() {
     return (
-      <div onClick={this.handleClick}>
+      <div>
         {this.props.title}
         <br/>
       </div>
@@ -91,36 +117,16 @@ var Ingredient = React.createClass({
 });
 
 var App = React.createClass({
-  getInitialState: function() {
-    return {currentRoute: "/recipes"};
-  },
-  onRoute: function(route){
-    this.setState({
-      currentRoute: route
-    });
-  },
-  componentDidMount: function(){
-    this.stopListening = routeStore.listen(this.onRoute);
-  },
-  componentWillUnmount: function(){
-    this.stopListening();
-  },
   render: function() {
-    var content;
-    if (this.state.currentRoute == "/recipes") {
-      content = <RecipesHome data={recipeData} />;
-    } else if (this.state.currentRoute == "/recipes/0") {
-      content = <Recipe
-        title={recipeData[0].title}
-        ingredients={recipeData[0].ingredients}
-        instructions={recipeData[0].instructions}
-      />;
-    }
-
     return (
-      <main>
-        {content}
-      </main>
+      <div>
+        <header>
+          <PageHeader />
+        </header>
+        <main>
+          <ReactRouter.RouteHandler />
+        </main>
+      </div>
     );
   }
 });
@@ -138,6 +144,15 @@ var recipeData = [
   }
 ];
 
-React.render(
-  <App />, document.getElementById('app-container')
+var routes = (
+  <ReactRouter.Route name="app" path="/" handler={App}>
+    <ReactRouter.Route name="recipes" handler={RecipesHome} />
+    <ReactRouter.Route name="about" handler={About} />
+    <ReactRouter.DefaultRoute handler={RecipesHome} />
+  </ReactRouter.Route>
 );
+
+
+ReactRouter.run(routes, function(Handler) {
+  React.render(<Handler />, document.getElementById('app-container'));
+});
