@@ -14,6 +14,35 @@ var PageHeader = React.createClass({
   }
 });
 
+var RecipeForm = React.createClass({
+  getInitialState: function(){
+    return (
+      {recipeData: [], title:'', ingredients:[], instructions:[]}
+    );
+  },
+  onChangeTitle: function(event){
+    this.setState({title:event.target.value})
+  },
+  handleSubmit: function(event){
+    event.preventDefault();
+    Actions.addRecipe({
+      title: this.state.title,
+      ingredients: this.state.ingredients,
+      instructions: this.state.instructions});
+    this.setState({title: '', ingredients: '', instructions: ''});
+  },
+  render: function(){
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
+          <button>Add</button>
+        </form>
+      </div>
+    );
+  }
+});
+
 var About = React.createClass({
   render: function() {
     return (
@@ -36,15 +65,23 @@ var RecipesHome = React.createClass({
 
 var RecipeList = React.createClass({
   getInitialState: function() {
-    return { data: recipeData };
+    return { data: recipeStore.getRecipeData() };
+  },
+  onAddRecipe: function(recipeData){
+    this.setState({data: recipeData})
+  },
+  componentDidMount: function() {
+    this.unsubscribe = recipeStore.listen(this.onAddRecipe)
+  },
+  componentWillUnmount: function() {
+    this.unsubscribe();
   },
   render: function() {
     var recipeNodes = this.state.data.map(function(recipe, index) {
       return (
-        <RecipeLink
-          key={index}
-          title={recipe.title}
-        />
+        <div>
+          <li><ReactRouter.Link to="recipe">{recipe.title}</ReactRouter.Link></li>
+        </div>
       )
     });
     return (
@@ -56,26 +93,18 @@ var RecipeList = React.createClass({
   }
 });
 
-var RecipeLink = React.createClass({
-  render: function() {
-    return (
-      <div>
-        {this.props.title}
-        <br/>
-      </div>
-    );
-  }
-});
-
 var Recipe = React.createClass({
+  getInitialState: function() {
+    return { data: recipeData[0] };
+  },
   render: function() {
     return (
       <div>
-        <h2>{this.props.title}</h2>
-        <h3>Ingredients:</h3>
-        <IngredientList ingredients={this.props.ingredients} />
-        <h3>Instructions:</h3>
-        <p>{this.props.instructions}</p>
+        <h1>{this.state.data.title}</h1>
+        <h2>Ingredients:</h2>
+        <IngredientList ingredients={this.state.data.ingredients} />
+        <h2>Instructions:</h2>
+        <p>{this.state.data.instructions}</p>
         <br/>
       </div>
     );
@@ -131,27 +160,15 @@ var App = React.createClass({
   }
 });
 
-var recipeData = [
-  {title: "Zuppa Tuscana",
-   ingredients: [
-     {quantity: '1', unit: "cup", name: "celery"},
-     {quantity: '2', unit: "cup", name: "fish"}
-   ],
-    instructions: [
-      {instruction: "cook celery with fish"},
-      {instruction: "add onion"}
-    ]
-  }
-];
-
 var routes = (
   <ReactRouter.Route name="app" path="/" handler={App}>
     <ReactRouter.Route name="recipes" handler={RecipesHome} />
     <ReactRouter.Route name="about" handler={About} />
+    <ReactRouter.Route name="admin" handler={RecipeForm} />
+    <ReactRouter.Route name="recipe" handler={Recipe} />
     <ReactRouter.DefaultRoute handler={RecipesHome} />
   </ReactRouter.Route>
 );
-
 
 ReactRouter.run(routes, function(Handler) {
   React.render(<Handler />, document.getElementById('app-container'));
