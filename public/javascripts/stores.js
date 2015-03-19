@@ -22,7 +22,8 @@ var recipeData = [
 ];
 
 var recipeStore = Reflux.createStore({
-  init: function(recipe){
+  init: function(){
+    // When Actions.addRecipe is fired, it calls addRecipe function, passing in the data given from the RecipeForm component
     this.listenTo(Actions.addRecipe, this.addRecipe);
   },
   addRecipe: function(recipe) {
