@@ -17,8 +17,18 @@ var PageHeader = React.createClass({
 var RecipeForm = React.createClass({
   getInitialState: function(){
     return (
-      {recipeData: [], title:'', ingredients:[], instructions:[]}
+      {title:'', ingredients:[], instructions: []}
     );
+  },
+  onChangeInstruction: function(instruction){
+    var instructions = [{instruction: instruction}];
+    this.setState({instructions: instructions});
+  },
+  componentDidMount: function() {
+    this.unsubscribe = instructionStore.listen(this.onChangeInstruction)
+  },
+  componentWillUnmount: function() {
+    this.unsubscribe();
   },
   onChangeTitle: function(event){
     this.setState({title:event.target.value})
@@ -36,9 +46,26 @@ var RecipeForm = React.createClass({
       <div>
         <form onSubmit={this.handleSubmit}>
           <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
-          <button>Add</button>
+          <InstructionForm/>
+          <button>Submit Recipe</button>
         </form>
       </div>
+    );
+  }
+});
+
+var InstructionForm = React.createClass({
+  getInitialState: function() {
+    return {instruction: ''};
+  },
+  onChangeInstruction: function(event) {
+    var updatedInstruction = event.target.value;
+    this.setState({instruction: updatedInstruction});
+    Actions.addAnInstruction(updatedInstruction);
+  },
+  render: function() {
+    return (
+      <input type='text' value={this.state.instruction} onChange={this.onChangeInstruction}></input>
     );
   }
 });
@@ -80,7 +107,7 @@ var RecipeList = React.createClass({
     var recipeNodes = this.state.data.map(function(recipe, index) {
       return (
         <div>
-          <li><ReactRouter.Link to="recipe">{recipe.title}</ReactRouter.Link></li>
+          <li><ReactRouter.Link to="recipe">{recipe.title} {recipe.instructions}</ReactRouter.Link></li>
         </div>
       )
     });

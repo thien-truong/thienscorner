@@ -34,3 +34,12 @@ var recipeStore = Reflux.createStore({
     return recipeData;
   }
 });
+
+var instructionStore = Reflux.createStore({
+  init: function() {
+    this.listenTo(Actions.addAnInstruction, this.onAddAnInstruction);
+  },
+  onAddAnInstruction: function(instruction) {
+    this.trigger(instruction);
+  }
+});
