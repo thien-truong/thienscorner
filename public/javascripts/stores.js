@@ -24,9 +24,9 @@ var recipeData = [
 var recipeStore = Reflux.createStore({
   init: function(){
     // When Actions.addRecipe is fired, it calls addRecipe function, passing in the data given from the RecipeForm component
-    this.listenTo(Actions.addRecipe, this.addRecipe);
+    this.listenTo(Actions.addRecipe, this.onAddRecipe);
   },
-  addRecipe: function(recipe) {
+  onAddRecipe: function(recipe) {
     recipeData.push(recipe);
     this.trigger(recipeData);
   },
@@ -35,11 +35,20 @@ var recipeStore = Reflux.createStore({
   }
 });
 
-var instructionStore = Reflux.createStore({
+var instructionInRecipeFormStore = Reflux.createStore({
   init: function() {
     this.listenTo(Actions.addAnInstruction, this.onAddAnInstruction);
   },
   onAddAnInstruction: function(instruction, index) {
     this.trigger(instruction, index);
+  }
+});
+
+var instructionFormStore = Reflux.createStore({
+  init: function(){
+    this.listenTo(Actions.addRecipe, this.onAddRecipe);
+  },
+  onAddRecipe: function() {
+    this.trigger();
   }
 });

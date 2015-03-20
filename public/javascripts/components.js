@@ -26,7 +26,7 @@ var RecipeForm = React.createClass({
     this.setState({instructions: instructions});
   },
   componentDidMount: function() {
-    this.unsubscribe = instructionStore.listen(this.onChangeInstruction)
+    this.unsubscribe = instructionInRecipeFormStore.listen(this.onChangeInstruction)
   },
   componentWillUnmount: function() {
     this.unsubscribe();
@@ -59,6 +59,15 @@ var RecipeForm = React.createClass({
 var InstructionForm = React.createClass({
   getInitialState: function() {
     return {instruction: ''};
+  },
+  onFormSubmission: function(){
+    this.setState({instruction: ''});
+  },
+  componentDidMount: function() {
+    this.unsubscribe = instructionFormStore.listen(this.onFormSubmission)
+  },
+  componentWillUnmount: function() {
+    this.unsubscribe();
   },
   onChangeInstruction: function(event) {
     var updatedInstruction = event.target.value;
