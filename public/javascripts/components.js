@@ -20,8 +20,9 @@ var RecipeForm = React.createClass({
       {title:'', ingredients:[], instructions: []}
     );
   },
-  onChangeInstruction: function(instruction){
-    var instructions = [{instruction: instruction}];
+  onChangeInstruction: function(instruction, index){
+    var instructions = this.state.instructions;
+    instructions[index] = {instruction: instruction};
     this.setState({instructions: instructions});
   },
   componentDidMount: function() {
@@ -39,14 +40,15 @@ var RecipeForm = React.createClass({
       title: this.state.title,
       ingredients: this.state.ingredients,
       instructions: this.state.instructions});
-    this.setState({title: '', ingredients: '', instructions: ''});
+    this.setState({title: '', ingredients: [], instructions: []});
   },
   render: function(){
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
-          <InstructionForm/>
+          <InstructionForm index={0} />
+          <InstructionForm index={1} />
           <button>Submit Recipe</button>
         </form>
       </div>
@@ -61,11 +63,13 @@ var InstructionForm = React.createClass({
   onChangeInstruction: function(event) {
     var updatedInstruction = event.target.value;
     this.setState({instruction: updatedInstruction});
-    Actions.addAnInstruction(updatedInstruction);
+    Actions.addAnInstruction(updatedInstruction, this.props.index);
   },
   render: function() {
     return (
-      <input type='text' value={this.state.instruction} onChange={this.onChangeInstruction}></input>
+      <div>
+        <input type='text' value={this.state.instruction} onChange={this.onChangeInstruction}></input>
+      </div>
     );
   }
 });

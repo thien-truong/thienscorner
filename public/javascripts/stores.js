@@ -39,7 +39,7 @@ var instructionStore = Reflux.createStore({
   init: function() {
     this.listenTo(Actions.addAnInstruction, this.onAddAnInstruction);
   },
-  onAddAnInstruction: function(instruction) {
-    this.trigger(instruction);
+  onAddAnInstruction: function(instruction, index) {
+    this.trigger(instruction, index);
   }
 });
