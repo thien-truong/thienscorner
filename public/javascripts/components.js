@@ -17,7 +17,7 @@ var PageHeader = React.createClass({
 var RecipeForm = React.createClass({
   getInitialState: function(){
     return (
-      {title:'', ingredients:[], instructions: []}
+      {title:'', ingredients:[], instructions: [], numberOfInstructions: 2}
     );
   },
   onChangeInstruction: function(instruction, index){
@@ -42,14 +42,20 @@ var RecipeForm = React.createClass({
       instructions: this.state.instructions});
     this.setState({title: '', ingredients: [], instructions: []});
   },
+  handleAddAnotherInstruction: function(){
+    this.setState({numberOfInstructions: this.state.numberOfInstructions + 1});
+  },
   render: function(){
+    var instructionKeys = Array.apply(null, Array(this.state.numberOfInstructions)).map(function(_, i) { return i; });
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
-          <InstructionForm index={0} />
-          <InstructionForm index={1} />
-          <button>Submit Recipe</button>
+          {instructionKeys.map(function(instructionKey) {
+            return <InstructionForm key={instructionKey} index={instructionKey} />;
+          })}
+          <button type='button' onClick={this.handleAddAnotherInstruction}>Add Another Instruction</button>
+          <input type='submit' value='Submit Recipe'></input>
         </form>
       </div>
     );
