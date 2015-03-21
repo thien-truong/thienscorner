@@ -50,11 +50,16 @@ var RecipeForm = React.createClass({
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
-          {instructionKeys.map(function(instructionKey) {
-            return <InstructionForm key={instructionKey} index={instructionKey} />;
-          })}
-          <button type='button' onClick={this.handleAddAnotherInstruction}>Add Another Instruction</button>
+          <label>Title
+            <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
+          </label>
+          <fieldset>
+            <legend>Instructions</legend>
+            {instructionKeys.map(function(instructionKey) {
+              return <InstructionForm key={instructionKey} index={instructionKey} />;
+            })}
+            <button type='button' onClick={this.handleAddAnotherInstruction}>Add Another Instruction</button>
+          </fieldset>
           <input type='submit' value='Submit Recipe'></input>
         </form>
       </div>
