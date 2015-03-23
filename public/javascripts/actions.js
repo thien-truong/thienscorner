@@ -1,4 +1,7 @@
 var Actions = Reflux.createActions([
   "addRecipe",
-  "addAnInstruction"
+  "addAnInstruction",
+  "addIngredientQuantity",
+  "addIngredientUnitOfMeasurement",
+  "addIngredientName"
 ]);
