@@ -1,3 +1,7 @@
+function range(numberOfItems) {
+  return Array.apply(null, Array(numberOfItems)).map(function(_, i) { return i; });
+}
+
 var PageHeader = React.createClass({
   render: function() {
     return (
@@ -59,6 +63,12 @@ var RecipeForm = React.createClass({
       ingredients: this.state.ingredients,
       instructions: this.state.instructions});
     this.setState({title: '', ingredients: [], instructions: []});
+    range(this.state.numberOfInstructions).map(function(instructionKey) {
+      this.refs['instruction_' + instructionKey].clear();
+    }, this);
+    range(this.state.numberOfIngredients).map(function(ingredientKey) {
+      this.refs['ingredient_' + ingredientKey].clear();
+    }, this);
     this.setState({numberOfIngredients: 2});
     this.setState({numberOfInstructions: 2});
   },
@@ -69,8 +79,8 @@ var RecipeForm = React.createClass({
     this.setState({numberOfIngredients: this.state.numberOfIngredients + 1});
   },
   render: function(){
-    var instructionKeys = Array.apply(null, Array(this.state.numberOfInstructions)).map(function(_, i) { return i; });
-    var ingredientKeys = Array.apply(null, Array(this.state.numberOfIngredients)).map(function(_, i) {return i; });
+    var instructionKeys = range(this.state.numberOfInstructions);
+    var ingredientKeys = range(this.state.numberOfIngredients);
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
@@ -82,6 +92,7 @@ var RecipeForm = React.createClass({
             {ingredientKeys.map(function(ingredientKey) {
               return <IngredientInRecipeForm key={ingredientKey}
                                              index={ingredientKey}
+                                             ref={'ingredient_' + ingredientKey}
                                              addAnIngredientQuantity={this.onChangeIngredientQuantity}
                                              addAnIngredientUnitOfMeasurement={this.onChangeIngredientUnitOfMeasurement}
                                              addAnIngredientName={this.onChangeIngredientName}
@@ -94,6 +105,7 @@ var RecipeForm = React.createClass({
             {instructionKeys.map(function(instructionKey) {
               return <InstructionInRecipeForm key={instructionKey}
                                               index={instructionKey}
+                                              ref={'instruction_' + instructionKey}
                                               addAnInstruction={this.onChangeInstruction} />;
             }, this)}
             <button type='button' onClick={this.handleAddAnotherInstruction}>Add Another Instruction</button>
@@ -106,17 +118,13 @@ var RecipeForm = React.createClass({
 });
 
 var IngredientInRecipeForm = React.createClass({
-  mixins: [Reflux.ListenerMixin],
   getInitialState: function() {
     return {quantity: null, unitOfMeasurement: '', name: ''}
   },
-  onAddAnIngredient: function() {
+  clear: function() {
     this.setState({quantity: null});
     this.setState({unitOfMeasurement: ''});
-    this.setState({name: ''})
-  },
-  componentDidMount: function() {
-    this.listenTo(ingredientStore, this.onAddAnIngredient)
+    this.setState({name: ''});
   },
   onChangeQuantity: function(event){
     var updatedIngredientQuantity = event.target.value;
@@ -145,15 +153,11 @@ var IngredientInRecipeForm = React.createClass({
 });
 
 var InstructionInRecipeForm = React.createClass({
-  mixins: [Reflux.ListenerMixin],
   getInitialState: function() {
     return {instruction: ''};
   },
-  onFormSubmission: function(){
+  clear: function(){
     this.setState({instruction: ''});
-  },
-  componentDidMount: function() {
-    this.listenTo(instructionFormStore, this.onFormSubmission)
   },
   onChangeInstruction: function(event) {
     var updatedInstruction = event.target.value;

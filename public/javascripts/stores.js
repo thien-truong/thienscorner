@@ -31,21 +31,3 @@ var recipeStore = Reflux.createStore({
     return recipeData;
   }
 });
-
-var instructionFormStore = Reflux.createStore({
-  init: function(){
-    this.listenTo(Actions.addRecipe, this.onAddRecipe);
-  },
-  onAddRecipe: function() {
-    this.trigger();
-  }
-});
-
-var ingredientStore = Reflux.createStore({
-  init: function(){
-    this.listenTo(Actions.addRecipe, this.onAddRecipe);
-  },
-  onAddRecipe: function() {
-    this.trigger();
-  }
-});
