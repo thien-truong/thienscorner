@@ -18,7 +18,7 @@ var RecipeForm = React.createClass({
   mixins: [Reflux.ListenerMixin],
   getInitialState: function(){
     return (
-      {title:'', ingredients:[], instructions: [], numberOfInstructions: 2, ingredient: []}
+      {title:'', instructions: [], numberOfInstructions: 2, ingredients:[], numberOfIngredients: 2}
     );
   },
   onChangeInstruction: function(instruction, index){
@@ -27,24 +27,27 @@ var RecipeForm = React.createClass({
     this.setState({instructions: instructions});
   },
   onChangeIngredientQuantity: function(quantity, index){
-    var ingredient = this.state.ingredient;
     var ingredients = this.state.ingredients;
-    ingredient[0] = {quantity: quantity};
-    ingredients[index] = {ingredient: ingredient};
+    if (!ingredients[index]) {
+      ingredients[index] = {}
+    }
+    ingredients[index].quantity = quantity;
     this.setState({ingredients: ingredients});
   },
   onChangeIngredientUnitOfMeasurement: function(unitOfMeasurement, index) {
-    var ingredient = this.state.ingredient;
     var ingredients = this.state.ingredients;
-    ingredient[1] = {unit: unitOfMeasurement};
-    ingredients[index] = {ingredient: ingredient};
+    if (!ingredients[index]) {
+      ingredients[index] = {}
+    }
+    ingredients[index].unit = unitOfMeasurement;
     this.setState({ingredients: ingredients});
   },
   onChangeIngredientName: function(name, index) {
-    var ingredient = this.state.ingredient;
     var ingredients = this.state.ingredients;
-    ingredient[3] = {name: name};
-    ingredients[index] = {ingredient: ingredient};
+    if (!ingredients[index]) {
+      ingredients[index] = {}
+    }
+    ingredients[index].name = name;
     this.setState({ingredients: ingredients});
   },
   componentDidMount: function() {
@@ -67,20 +70,29 @@ var RecipeForm = React.createClass({
   handleAddAnotherInstruction: function(){
     this.setState({numberOfInstructions: this.state.numberOfInstructions + 1});
   },
+  handleAddAnotherIngredient: function(){
+    this.setState({numberOfIngredients: this.state.numberOfIngredients + 1});
+  },
   render: function(){
     var instructionKeys = Array.apply(null, Array(this.state.numberOfInstructions)).map(function(_, i) { return i; });
+    var ingredientKeys = Array.apply(null, Array(this.state.numberOfIngredients)).map(function(_, i) {return i; });
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>Title
             <input type='text' value={this.state.title} onChange={this.onChangeTitle}></input>
           </label>
-          <IngredientInRecipeForm index={0} />
-
+          <fieldset>
+            <legend>Ingredients</legend>
+            {ingredientKeys.map(function(ingredientKey) {
+              return <IngredientInRecipeForm key={ingredientKey} index={ingredientKey} />;
+            })}
+            <button type='button' onClick={this.handleAddAnotherIngredient}>Add Another Ingredient</button>
+          </fieldset>
           <fieldset>
             <legend>Instructions</legend>
             {instructionKeys.map(function(instructionKey) {
-              return <InstructionInRecipeForm key={instructionKey} index={instructionKey} />;
+              return <InstructionInRecipeForm key={instructionKey} index={instructionKey}/>;
             })}
             <button type='button' onClick={this.handleAddAnotherInstruction}>Add Another Instruction</button>
           </fieldset>
@@ -92,8 +104,17 @@ var RecipeForm = React.createClass({
 });
 
 var IngredientInRecipeForm = React.createClass({
+  mixins: [Reflux.ListenerMixin],
   getInitialState: function() {
     return {quantity: null, unitOfMeasurement: '', name: ''}
+  },
+  onAddAnIngredient: function() {
+    this.setState({quantity: null});
+    this.setState({unitOfMeasurement: ''});
+    this.setState({name: ''})
+  },
+  componentDidMount: function() {
+    this.listenTo(ingredientStore, this.onAddAnIngredient)
   },
   onChangeQuantity: function(event){
     var updatedIngredientQuantity = event.target.value;
