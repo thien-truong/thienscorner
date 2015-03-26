@@ -9,8 +9,8 @@ var PageHeader = React.createClass({
         <h1>Thien's Corner</h1>
         <nav>
           <ul>
-            <li><ReactRouter.Link to="recipes">Recipes</ReactRouter.Link></li>
-            <li><ReactRouter.Link to="about">About</ReactRouter.Link></li>
+            <li><ReactRouter.Link to="/recipes">Recipes</ReactRouter.Link></li>
+            <li><ReactRouter.Link to="/about">About</ReactRouter.Link></li>
           </ul>
         </nav>
       </div>
@@ -209,7 +209,7 @@ var RecipeList = React.createClass({
       return (
         <div>
           <li>
-            <ReactRouter.Link to="recipe">{recipe.title} {recipe.instructions} {recipe.ingredients}</ReactRouter.Link>
+            <ReactRouter.Link to={"/recipes/" + index}>{recipe.title} </ReactRouter.Link>
           </li>
         </div>
       )
@@ -225,16 +225,21 @@ var RecipeList = React.createClass({
 
 var Recipe = React.createClass({
   getInitialState: function() {
-    return { data: recipeData[0] };
+    return { data: recipeStore.getRecipeData()};
+  },
+  contextTypes: {
+    router: React.PropTypes.func
   },
   render: function() {
+    var recipeId = this.context.router.getCurrentParams().recipeId;
+    var recipe = this.state.data[recipeId];
     return (
       <div>
-        <h1>{this.state.data.title}</h1>
+        <h1>{recipe.title}</h1>
         <h2>Ingredients:</h2>
-        <IngredientList ingredients={this.state.data.ingredients} />
+        <IngredientList ingredients={recipe.ingredients} />
         <h2>Instructions:</h2>
-        <p>{this.state.data.instructions}</p>
+        <p>{recipe.instructions}</p>
         <br/>
       </div>
     );
@@ -291,11 +296,11 @@ var App = React.createClass({
 });
 
 var routes = (
-  <ReactRouter.Route name="app" path="/" handler={App}>
-    <ReactRouter.Route name="recipes" handler={RecipesHome} />
-    <ReactRouter.Route name="about" handler={About} />
-    <ReactRouter.Route name="admin" handler={RecipeForm} />
-    <ReactRouter.Route name="recipe" handler={Recipe} />
+  <ReactRouter.Route path="/" handler={App}>
+    <ReactRouter.Route path="about" handler={About} />
+    <ReactRouter.Route path="admin" handler={RecipeForm} />
+    <ReactRouter.Route path="recipes" handler={RecipesHome} />
+    <ReactRouter.Route path="recipes/:recipeId" handler={Recipe} />
     <ReactRouter.DefaultRoute handler={RecipesHome} />
   </ReactRouter.Route>
 );

@@ -9,8 +9,8 @@
     "tests"
   ],
   "dependencies": {
-    "react": "~0.12",
+    "react": "~0.13",
     "reflux": "~0",
-    "react-router": "~0.12"
+    "react-router": "~0.13"
   }
 }
